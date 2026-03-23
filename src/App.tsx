@@ -636,31 +636,32 @@ const BrandCard = ({ title, desc, features, color }: { title: string, desc: stri
   );
 };
 
-const CaseCard = ({ title, category, img }: { title: string, category: string, img: string }) => {
+const CaseCard = React.forwardRef<HTMLDivElement, { title: string, category: string, img: string }>(({ title, category, img }, ref) => {
   return (
     <motion.div 
+      ref={ref}
       layout
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.8 }}
-      whileHover={{ scale: 1.02 }}
-      transition={{ duration: 0.4, ease: "easeOut" }}
-      className="group relative rounded-3xl overflow-hidden aspect-[4/3] cursor-pointer"
+      whileHover={{ scale: 1.03, y: -8 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className="group relative rounded-3xl overflow-hidden aspect-[4/3] cursor-pointer shadow-md hover:shadow-2xl transition-shadow duration-500"
     >
-      <img src={img} alt={title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" referrerPolicy="no-referrer" />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-80 group-hover:opacity-100 transition-opacity" />
-      <div className="absolute bottom-0 left-0 p-8 w-full transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+      <img src={img} alt={title} className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110" referrerPolicy="no-referrer" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-70 group-hover:opacity-100 transition-opacity duration-500" />
+      <div className="absolute bottom-0 left-0 p-8 w-full transform translate-y-0 opacity-100 md:translate-y-8 md:opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 ease-out">
         <span className="px-3 py-1 bg-[#00E5FF]/20 text-[#00E5FF] text-xs font-medium rounded-full backdrop-blur-md mb-4 inline-block">{category}</span>
         <h3 className="text-2xl font-medium text-white flex items-center justify-between">
           {title}
-          <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity delay-100">
+          <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-md opacity-0 group-hover:opacity-100 transform translate-x-4 group-hover:translate-x-0 transition-all duration-500 ease-out delay-100">
             <ChevronRight className="w-5 h-5" />
           </div>
         </h3>
       </div>
     </motion.div>
   );
-};
+});
 
 const AboutCard = ({ title, desc, icon }: { title: string, desc: string, icon: React.ReactNode }) => {
   return (
