@@ -422,12 +422,18 @@ export default function App() {
             ))}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <CaseCard title="光储一体化项目" category={t.cases.factory} img="https://picsum.photos/seed/solar1/800/600" filterCategory="factory" activeFilter={activeFilter} />
-            <CaseCard title="绿电+水蓄冷项目" category={t.cases.factory} img="https://picsum.photos/seed/factory2/800/600" filterCategory="factory" activeFilter={activeFilter} />
-            <CaseCard title="光伏+污水处理项目" category={t.cases.park} img="https://picsum.photos/seed/water3/800/600" filterCategory="park" activeFilter={activeFilter} />
-            <CaseCard title="德国光储充一体化项目" category={t.cases.park} img="https://picsum.photos/seed/germany4/800/600" filterCategory="park" activeFilter={activeFilter} />
-          </div>
+          <motion.div layout className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <AnimatePresence mode="popLayout">
+              {[
+                { id: 'case1', title: "光储一体化项目", category: t.cases.factory, img: "https://picsum.photos/seed/solar1/800/600", filterCategory: "factory" },
+                { id: 'case2', title: "绿电+水蓄冷项目", category: t.cases.factory, img: "https://picsum.photos/seed/factory2/800/600", filterCategory: "factory" },
+                { id: 'case3', title: "光伏+污水处理项目", category: t.cases.park, img: "https://picsum.photos/seed/water3/800/600", filterCategory: "park" },
+                { id: 'case4', title: "德国光储充一体化项目", category: t.cases.park, img: "https://picsum.photos/seed/germany4/800/600", filterCategory: "park" }
+              ].filter(c => activeFilter === 'all' || activeFilter === c.filterCategory).map(c => (
+                <CaseCard key={c.id} title={c.title} category={c.category} img={c.img} />
+              ))}
+            </AnimatePresence>
+          </motion.div>
         </div>
       </section>
 
@@ -630,18 +636,18 @@ const BrandCard = ({ title, desc, features, color }: { title: string, desc: stri
   );
 };
 
-const CaseCard = ({ title, category, img, filterCategory, activeFilter }: { title: string, category: string, img: string, filterCategory: string, activeFilter: string }) => {
-  if (activeFilter !== 'all' && activeFilter !== filterCategory) return null;
-
+const CaseCard = ({ title, category, img }: { title: string, category: string, img: string }) => {
   return (
     <motion.div 
       layout
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.8 }}
+      whileHover={{ scale: 1.02 }}
+      transition={{ duration: 0.4, ease: "easeOut" }}
       className="group relative rounded-3xl overflow-hidden aspect-[4/3] cursor-pointer"
     >
-      <img src={img} alt={title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" referrerPolicy="no-referrer" />
+      <img src={img} alt={title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" referrerPolicy="no-referrer" />
       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-80 group-hover:opacity-100 transition-opacity" />
       <div className="absolute bottom-0 left-0 p-8 w-full transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
         <span className="px-3 py-1 bg-[#00E5FF]/20 text-[#00E5FF] text-xs font-medium rounded-full backdrop-blur-md mb-4 inline-block">{category}</span>
