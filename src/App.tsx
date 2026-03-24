@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence, useInView } from 'motion/react';
-import { Globe, Menu, X, ChevronDown, ArrowRight, Zap, Target, Leaf, Activity, Server, Cpu, Cloud, MapPin, Mail, Building2, Sparkles, Send, ChevronRight } from 'lucide-react';
+import { Globe, Menu, X, ChevronDown, ArrowRight, Zap, Target, Leaf, Activity, Server, Cpu, Cloud, MapPin, Mail, Building2, Sparkles, Send, ChevronRight, Pause, Play } from 'lucide-react';
 import { ComposableMap, Geographies, Geography, Marker } from 'react-simple-maps';
 import { GoogleGenAI } from '@google/genai';
 
@@ -10,7 +10,7 @@ type Lang = 'zh' | 'en' | 'de' | 'vi' | 'th';
 const translations = {
   zh: {
     nav: { home: '首页', products: '产品中心', cases: '案例中心', about: '关于我们', contact: '联系我们' },
-    hero: { title: 'AI+能源驱动的', highlight: '“零碳新质生产力”', suffix: '运营商', cta: '探索解决方案与了解我们', tag1: '智能调度', tag2: '绿色能源', tag3: '零碳未来' },
+    hero: { title: 'Megapack', subtitle: '大规模储能系统', btn1: '获取更新', btn2: '了解更多' },
     stats: { gw: '累计运营可再生能源资产', kwh: '累计节约电能', co2: '累计减少碳排放', desc: '我们不仅提供能源解决方案，更构建可持续发展的底层能源能力。' },
     products: { title: '价值创造，产品中心', filterAll: '全部', filterSmart: '智能设备', filterSoft: '软件系统', filterSol: '解决方案', matrix: '1+5 多维产品矩阵', sixDim: '六维建设体系', brands: '三大品牌服务' },
     cases: { title: '标杆案例中心', all: '全部案例', factory: '零碳工厂', park: '零碳园区' },
@@ -19,16 +19,16 @@ const translations = {
   },
   en: {
     nav: { home: 'Home', products: 'Products', cases: 'Cases', about: 'About', contact: 'Contact' },
-    hero: { title: 'AI-Driven', highlight: '"Zero-Carbon New Productive Forces"', suffix: 'Operator', cta: 'Explore Solutions & Discover Us', tag1: 'Smart Dispatch', tag2: 'Green Energy', tag3: 'Zero-Carbon Future' },
+    hero: { title: 'Megapack', subtitle: 'Large-Scale Energy Storage', btn1: 'Get Updates', btn2: 'Learn More' },
     stats: { gw: 'Renewable Energy Assets', kwh: 'Energy Saved', co2: 'Carbon Reduced', desc: 'We provide energy solutions and build sustainable underlying energy capabilities.' },
     products: { title: 'Value Creation, Products Center', filterAll: 'All', filterSmart: 'Smart Devices', filterSoft: 'Software', filterSol: 'Solutions', matrix: '1+5 Product Matrix', sixDim: '6-Dimension System', brands: 'Three Brand Services' },
     cases: { title: 'Benchmark Cases', all: 'All Cases', factory: 'Zero-Carbon Factory', park: 'Zero-Carbon Park' },
     about: { title: 'About Us', vision: 'Core Vision', positioning: 'Core Positioning', focus: 'Focus Areas', value: 'Customer Value', mapTitle: 'Global Layout' },
     contact: { title: 'Contact Us', aiTitle: 'AI Energy Diagnosis', aiPlaceholder: 'Describe your energy pain points (e.g., high bills, harmonics)...', aiBtn: 'Get Diagnosis', hq: 'Global HQ', email: 'Email' }
   },
-  de: { nav: { home: 'Startseite', products: 'Produkte', cases: 'Fälle', about: 'Über uns', contact: 'Kontakt' }, hero: { title: 'KI-gesteuerter', highlight: '"Zero-Carbon New Productive Forces"', suffix: 'Betreiber', cta: 'Lösungen erkunden', tag1: 'Smart Dispatch', tag2: 'Grüne Energie', tag3: 'Null-Kohlenstoff-Zukunft' }, stats: { gw: 'Erneuerbare Energien', kwh: 'Energie gespart', co2: 'CO2 reduziert', desc: 'Wir bieten Energielösungen und bauen nachhaltige Energiefähigkeiten auf.' }, products: { title: 'Wertschöpfung, Produktzentrum', filterAll: 'Alle', filterSmart: 'Smart Devices', filterSoft: 'Software', filterSol: 'Lösungen', matrix: '1+5 Produktmatrix', sixDim: '6-Dimensionen-System', brands: 'Drei Markendienste' }, cases: { title: 'Benchmark-Fälle', all: 'Alle Fälle', factory: 'Null-Kohlenstoff-Fabrik', park: 'Null-Kohlenstoff-Park' }, about: { title: 'Über uns', vision: 'Kernvision', positioning: 'Kernpositionierung', focus: 'Fokusbereiche', value: 'Kundenwert', mapTitle: 'Globales Layout' }, contact: { title: 'Kontakt', aiTitle: 'KI-Energiediagnose', aiPlaceholder: 'Beschreiben Sie Ihre Energieprobleme...', aiBtn: 'Diagnose erhalten', hq: 'Globales HQ', email: 'E-Mail' } },
-  vi: { nav: { home: 'Trang chủ', products: 'Sản phẩm', cases: 'Dự án', about: 'Về chúng tôi', contact: 'Liên hệ' }, hero: { title: 'Điều khiển bằng AI', highlight: '"Lực lượng sản xuất mới không carbon"', suffix: 'Nhà điều hành', cta: 'Khám phá giải pháp', tag1: 'Điều phối thông minh', tag2: 'Năng lượng xanh', tag3: 'Tương lai không carbon' }, stats: { gw: 'Tài sản năng lượng tái tạo', kwh: 'Năng lượng tiết kiệm', co2: 'Carbon giảm', desc: 'Chúng tôi cung cấp giải pháp năng lượng và xây dựng khả năng năng lượng bền vững.' }, products: { title: 'Tạo giá trị, Trung tâm sản phẩm', filterAll: 'Tất cả', filterSmart: 'Thiết bị thông minh', filterSoft: 'Phần mềm', filterSol: 'Giải pháp', matrix: 'Ma trận sản phẩm 1+5', sixDim: 'Hệ thống 6 chiều', brands: 'Ba dịch vụ thương hiệu' }, cases: { title: 'Dự án tiêu biểu', all: 'Tất cả dự án', factory: 'Nhà máy không carbon', park: 'Khu công nghiệp không carbon' }, about: { title: 'Về chúng tôi', vision: 'Tầm nhìn cốt lõi', positioning: 'Định vị cốt lõi', focus: 'Lĩnh vực trọng tâm', value: 'Giá trị khách hàng', mapTitle: 'Bố cục toàn cầu' }, contact: { title: 'Liên hệ', aiTitle: 'Chẩn đoán năng lượng AI', aiPlaceholder: 'Mô tả các vấn đề năng lượng của bạn...', aiBtn: 'Nhận chẩn đoán', hq: 'Trụ sở toàn cầu', email: 'Email' } },
-  th: { nav: { home: 'หน้าแรก', products: 'ผลิตภัณฑ์', cases: 'กรณีศึกษา', about: 'เกี่ยวกับเรา', contact: 'ติดต่อเรา' }, hero: { title: 'ขับเคลื่อนด้วย AI', highlight: '"พลังการผลิตใหม่ไร้คาร์บอน"', suffix: 'ผู้ดำเนินการ', cta: 'สำรวจโซลูชัน', tag1: 'การจัดส่งอัจฉริยะ', tag2: 'พลังงานสีเขียว', tag3: 'อนาคตไร้คาร์บอน' }, stats: { gw: 'สินทรัพย์พลังงานหมุนเวียน', kwh: 'ประหยัดพลังงาน', co2: 'ลดคาร์บอน', desc: 'เราจัดหาโซลูชันพลังงานและสร้างความสามารถด้านพลังงานที่ยั่งยืน' }, products: { title: 'การสร้างมูลค่า, ศูนย์ผลิตภัณฑ์', filterAll: 'ทั้งหมด', filterSmart: 'อุปกรณ์อัจฉริยะ', filterSoft: 'ซอฟต์แวร์', filterSol: 'โซลูชัน', matrix: 'เมทริกซ์ผลิตภัณฑ์ 1+5', sixDim: 'ระบบ 6 มิติ', brands: 'สามบริการแบรนด์' }, cases: { title: 'กรณีศึกษามาตรฐาน', all: 'กรณีศึกษาทั้งหมด', factory: 'โรงงานไร้คาร์บอน', park: 'สวนอุตสาหกรรมไร้คาร์บอน' }, about: { title: 'เกี่ยวกับเรา', vision: 'วิสัยทัศน์หลัก', positioning: 'ตำแหน่งหลัก', focus: 'พื้นที่โฟกัส', value: 'คุณค่าของลูกค้า', mapTitle: 'เค้าโครงระดับโลก' }, contact: { title: 'ติดต่อเรา', aiTitle: 'การวินิจฉัยพลังงาน AI', aiPlaceholder: 'อธิบายปัญหาพลังงานของคุณ...', aiBtn: 'รับการวินิจฉัย', hq: 'สำนักงานใหญ่ระดับโลก', email: 'อีเมล' } }
+  de: { nav: { home: 'Startseite', products: 'Produkte', cases: 'Fälle', about: 'Über uns', contact: 'Kontakt' }, hero: { title: 'Megapack', subtitle: 'Großflächige Energiespeicherung', btn1: 'Updates erhalten', btn2: 'Mehr erfahren' }, stats: { gw: 'Erneuerbare Energien', kwh: 'Energie gespart', co2: 'CO2 reduziert', desc: 'Wir bieten Energielösungen und bauen nachhaltige Energiefähigkeiten auf.' }, products: { title: 'Wertschöpfung, Produktzentrum', filterAll: 'Alle', filterSmart: 'Smart Devices', filterSoft: 'Software', filterSol: 'Lösungen', matrix: '1+5 Produktmatrix', sixDim: '6-Dimensionen-System', brands: 'Drei Markendienste' }, cases: { title: 'Benchmark-Fälle', all: 'Alle Fälle', factory: 'Null-Kohlenstoff-Fabrik', park: 'Null-Kohlenstoff-Park' }, about: { title: 'Über uns', vision: 'Kernvision', positioning: 'Kernpositionierung', focus: 'Fokusbereiche', value: 'Kundenwert', mapTitle: 'Globales Layout' }, contact: { title: 'Kontakt', aiTitle: 'KI-Energiediagnose', aiPlaceholder: 'Beschreiben Sie Ihre Energieprobleme...', aiBtn: 'Diagnose erhalten', hq: 'Globales HQ', email: 'E-Mail' } },
+  vi: { nav: { home: 'Trang chủ', products: 'Sản phẩm', cases: 'Dự án', about: 'Về chúng tôi', contact: 'Liên hệ' }, hero: { title: 'Megapack', subtitle: 'Hệ thống lưu trữ năng lượng quy mô lớn', btn1: 'Nhận thông tin cập nhật', btn2: 'Tìm hiểu thêm' }, stats: { gw: 'Tài sản năng lượng tái tạo', kwh: 'Năng lượng tiết kiệm', co2: 'Carbon giảm', desc: 'Chúng tôi cung cấp giải pháp năng lượng và xây dựng khả năng năng lượng bền vững.' }, products: { title: 'Tạo giá trị, Trung tâm sản phẩm', filterAll: 'Tất cả', filterSmart: 'Thiết bị thông minh', filterSoft: 'Phần mềm', filterSol: 'Giải pháp', matrix: 'Ma trận sản phẩm 1+5', sixDim: 'Hệ thống 6 chiều', brands: 'Ba dịch vụ thương hiệu' }, cases: { title: 'Dự án tiêu biểu', all: 'Tất cả dự án', factory: 'Nhà máy không carbon', park: 'Khu công nghiệp không carbon' }, about: { title: 'Về chúng tôi', vision: 'Tầm nhìn cốt lõi', positioning: 'Định vị cốt lõi', focus: 'Lĩnh vực trọng tâm', value: 'Giá trị khách hàng', mapTitle: 'Bố cục toàn cầu' }, contact: { title: 'Liên hệ', aiTitle: 'Chẩn đoán năng lượng AI', aiPlaceholder: 'Mô tả các vấn đề năng lượng của bạn...', aiBtn: 'Nhận chẩn đoán', hq: 'Trụ sở toàn cầu', email: 'Email' } },
+  th: { nav: { home: 'หน้าแรก', products: 'ผลิตภัณฑ์', cases: 'กรณีศึกษา', about: 'เกี่ยวกับเรา', contact: 'ติดต่อเรา' }, hero: { title: 'Megapack', subtitle: 'ระบบกักเก็บพลังงานขนาดใหญ่', btn1: 'รับการอัปเดต', btn2: 'เรียนรู้เพิ่มเติม' }, stats: { gw: 'สินทรัพย์พลังงานหมุนเวียน', kwh: 'ประหยัดพลังงาน', co2: 'ลดคาร์บอน', desc: 'เราจัดหาโซลูชันพลังงานและสร้างความสามารถด้านพลังงานที่ยั่งยืน' }, products: { title: 'การสร้างมูลค่า, ศูนย์ผลิตภัณฑ์', filterAll: 'ทั้งหมด', filterSmart: 'อุปกรณ์อัจฉริยะ', filterSoft: 'ซอฟต์แวร์', filterSol: 'โซลูชัน', matrix: 'เมทริกซ์ผลิตภัณฑ์ 1+5', sixDim: 'ระบบ 6 มิติ', brands: 'สามบริการแบรนด์' }, cases: { title: 'กรณีศึกษามาตรฐาน', all: 'กรณีศึกษาทั้งหมด', factory: 'โรงงานไร้คาร์บอน', park: 'สวนอุตสาหกรรมไร้คาร์บอน' }, about: { title: 'เกี่ยวกับเรา', vision: 'วิสัยทัศน์หลัก', positioning: 'ตำแหน่งหลัก', focus: 'พื้นที่โฟกัส', value: 'คุณค่าของลูกค้า', mapTitle: 'เค้าโครงระดับโลก' }, contact: { title: 'ติดต่อเรา', aiTitle: 'การวินิจฉัยพลังงาน AI', aiPlaceholder: 'อธิบายปัญหาพลังงานของคุณ...', aiBtn: 'รับการวินิจฉัย', hq: 'สำนักงานใหญ่ระดับโลก', email: 'อีเมล' } }
 };
 
 // --- Components ---
@@ -56,8 +56,52 @@ const AnimatedCounter = ({ value, suffix = '', duration = 2.5 }: { value: number
   return <span ref={ref} className="font-mono tracking-tighter">{count}{suffix}</span>;
 };
 
-const MapChart = () => {
+const MapChart = ({ lang }: { lang: Lang }) => {
   const geoUrl = "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json";
+  
+  const markerNames = {
+    zh: {
+      "Shenzhen": "深圳",
+      "California": "加州",
+      "Thailand": "泰国",
+      "Germany": "德国",
+      "Vietnam": "越南",
+      "Australia": "澳大利亚"
+    },
+    en: {
+      "Shenzhen": "Shenzhen",
+      "California": "California",
+      "Thailand": "Thailand",
+      "Germany": "Germany",
+      "Vietnam": "Vietnam",
+      "Australia": "Australia"
+    },
+    de: {
+      "Shenzhen": "Shenzhen",
+      "California": "Kalifornien",
+      "Thailand": "Thailand",
+      "Germany": "Deutschland",
+      "Vietnam": "Vietnam",
+      "Australia": "Australien"
+    },
+    vi: {
+      "Shenzhen": "Thâm Quyến",
+      "California": "California",
+      "Thailand": "Thái Lan",
+      "Germany": "Đức",
+      "Vietnam": "Việt Nam",
+      "Australia": "Úc"
+    },
+    th: {
+      "Shenzhen": "เซินเจิ้น",
+      "California": "แคลิฟอร์เนีย",
+      "Thailand": "ประเทศไทย",
+      "Germany": "เยอรมนี",
+      "Vietnam": "เวียดนาม",
+      "Australia": "ออสเตรเลีย"
+    }
+  };
+
   const markers = [
     { name: "Shenzhen", coordinates: [114.0579, 22.5431] },
     { name: "California", coordinates: [-119.4179, 36.7783] },
@@ -92,6 +136,13 @@ const MapChart = () => {
           <Marker key={name} coordinates={coordinates as [number, number]}>
             <circle r={6} fill="#00E5FF" className="animate-ping absolute" opacity={0.6} />
             <circle r={3} fill="#0066FF" />
+            <text
+              textAnchor="middle"
+              y={-12}
+              style={{ fontFamily: "system-ui", fill: "#A0AEC0", fontSize: "12px", fontWeight: 500 }}
+            >
+              {markerNames[lang][name as keyof typeof markerNames['zh']]}
+            </text>
           </Marker>
         ))}
       </ComposableMap>
@@ -103,6 +154,7 @@ const MapChart = () => {
 
 export default function App() {
   const [lang, setLang] = useState<Lang>('zh');
+  const [isBgPlaying, setIsBgPlaying] = useState(true);
   const t = translations[lang];
   const { scrollY } = useScroll();
   const [scrolled, setScrolled] = useState(false);
@@ -240,57 +292,59 @@ export default function App() {
 
       {/* --- Hero Section --- */}
       <section id="home" className="relative h-screen flex items-center justify-center overflow-hidden">
-        {/* Video Background Simulation */}
-        <div className="absolute inset-0 z-0">
+        {/* Dynamic Background */}
+        <div className="absolute inset-0 z-0 bg-black">
           <img 
-            src="https://picsum.photos/seed/windturbine/1920/1080" 
-            alt="Wind Turbine Sunset" 
-            className="w-full h-full object-cover animate-[pulse_20s_ease-in-out_infinite] scale-105"
+            src="https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=2500&auto=format&fit=crop" 
+            alt="Energy Storage Sunset" 
+            className={`w-full h-full object-cover animate-kenburns ${isBgPlaying ? '' : '[animation-play-state:paused]'}`}
             referrerPolicy="no-referrer"
           />
-          <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px]" />
-          {/* 3D Particle stream simulation */}
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,229,255,0.08)_0%,transparent_60%)]" />
+          <div className="absolute inset-0 bg-black/40" />
         </div>
 
-        <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 text-center mt-20">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="flex flex-wrap justify-center gap-3 mb-8"
-          >
-            {[t.hero.tag1, t.hero.tag2, t.hero.tag3].map((tag, i) => (
-              <span key={i} className="px-4 py-1.5 rounded-full text-xs font-medium border border-[#00E5FF]/30 bg-[#00E5FF]/10 text-[#00E5FF] backdrop-blur-md animate-[pulse_3s_ease-in-out_infinite]">
-                {tag}
-              </span>
-            ))}
-          </motion.div>
-
+        <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 text-center mt-10">
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-            className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter leading-tight mb-6"
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="text-5xl md:text-7xl lg:text-[80px] font-semibold tracking-tight leading-tight mb-4 text-white"
           >
-            {t.hero.title} <br className="hidden md:block" />
-            <span className="text-gradient-cyan">{t.hero.highlight}</span> <br className="hidden md:block" />
-            {t.hero.suffix}
+            {t.hero.title}
           </motion.h1>
+          
+          <motion.p
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+            className="text-xl md:text-2xl font-light text-white mb-10"
+          >
+            {t.hero.subtitle}
+          </motion.p>
 
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
+            className="flex flex-col sm:flex-row items-center justify-center gap-4"
           >
-            <button onClick={() => scrollTo('products')} className="group relative inline-flex items-center justify-center px-8 py-4 font-medium text-white bg-[#0066FF] rounded-full overflow-hidden transition-all hover:scale-105 hover:shadow-[0_0_40px_rgba(0,102,255,0.4)]">
-              <span className="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-black"></span>
-              <span className="relative flex items-center gap-2">
-                {t.hero.cta} <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </span>
+            <button className="w-full sm:w-auto px-10 py-3 font-medium text-white bg-[#3E6AE1] hover:bg-[#3457B2] rounded-md transition-colors duration-300">
+              {t.hero.btn1}
+            </button>
+            <button className="w-full sm:w-auto px-10 py-3 font-medium text-[#171A20] bg-white hover:bg-gray-200 rounded-md transition-colors duration-300">
+              {t.hero.btn2}
             </button>
           </motion.div>
         </div>
+
+        {/* Play/Pause Button */}
+        <button 
+          onClick={() => setIsBgPlaying(!isBgPlaying)}
+          className="absolute bottom-8 left-8 z-20 w-10 h-10 flex items-center justify-center bg-black/40 hover:bg-black/60 backdrop-blur-sm rounded-sm transition-colors"
+          aria-label={isBgPlaying ? "Pause background" : "Play background"}
+        >
+          {isBgPlaying ? <Pause className="w-5 h-5 text-white" fill="currentColor" /> : <Play className="w-5 h-5 text-white" fill="currentColor" />}
+        </button>
       </section>
 
       {/* --- Products Center --- */}
@@ -459,7 +513,7 @@ export default function App() {
                 <p className="text-gray-400 max-w-md">成立于2017年加州，2025年设立深圳总部。业务遍及中国、美国、德国、越南、泰国、澳大利亚。</p>
               </div>
             </div>
-            <MapChart />
+            <MapChart lang={lang} />
           </div>
         </div>
       </section>

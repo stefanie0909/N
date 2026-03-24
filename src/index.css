@@ -48,7 +48,15 @@ body {
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* Text gradients */
+@keyframes kenburns {
+  0% { transform: scale(1) translate(0, 0); }
+  50% { transform: scale(1.1) translate(-1%, -1%); }
+  100% { transform: scale(1) translate(0, 0); }
+}
+
+.animate-kenburns {
+  animation: kenburns 30s ease-in-out infinite;
+}
 .text-gradient-cyan {
   background: linear-gradient(to right, #00E5FF, #0066FF);
   -webkit-background-clip: text;
